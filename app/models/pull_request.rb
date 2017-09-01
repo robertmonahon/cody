@@ -14,6 +14,7 @@ class PullRequest < ApplicationRecord
   scope :pending_review, -> { where(status: "pending_review") }
 
   belongs_to :parent_pull_request, required: false, class_name: "PullRequest"
+  belongs_to :repository
   has_many :reviewers
 
   has_paper_trail

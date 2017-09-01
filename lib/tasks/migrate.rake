@@ -120,4 +120,14 @@ namespace :data do
       puts
     end
   end
+
+  desc "Move repositories from string columns into table"
+  task migrate_repositories: :environment do
+    pr_repos = PullRequest.uniq.pluck(:repository_name)
+    pr_repos.each do |repo_name|
+      owner, name = repo_name.split("/", 2)
+      repo = Repository.find_or_create_by!(owner: owner, name: name)
+      PullRequest.where(repository_name: repo_name).update(repository_id: repo.id)
+    end
+  end
 end

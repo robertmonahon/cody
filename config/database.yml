@@ -23,8 +23,8 @@ default: &default
 
 development:
   <<: *default
-  # database: cody_development
-  database: cody_prod_dump
+  database: cody_development
+  # database: cody_prod_dump
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.

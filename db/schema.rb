@@ -42,8 +42,10 @@ ActiveRecord::Schema.define(version: 20170819054248) do
     t.string "reviewer"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "repository"
+    t.string "repository_name"
     t.string "short_code"
+    t.bigint "repository_id"
+    t.index ["repository_id"], name: "index_review_rules_on_repository_id"
   end
 
   create_table "reviewers", force: :cascade do |t|
