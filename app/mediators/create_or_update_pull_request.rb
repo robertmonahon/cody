@@ -31,7 +31,7 @@ class CreateOrUpdatePullRequest
     # uniqueness by reviewer login
     check_box_pairs.uniq! { |pair| pair[1] }
 
-    minimum_reviewers_required = Setting.lookup("minimum_reviewers_required")
+    minimum_reviewers_required = Setting.lookup("minimum_reviewers_required", pull_request["base"]["repo"]["full_name"])
     if minimum_reviewers_required.present? &&
       check_box_pairs.count < minimum_reviewers_required
 
@@ -51,18 +51,6 @@ class CreateOrUpdatePullRequest
     end
 
     all_reviewers = pending_reviews + completed_reviews
-
-    minimum_super_reviewers = Setting.lookup("minimum_super_reviewers")
-    if minimum_super_reviewers.present?
-      super_reviewers = Setting.lookup("super_reviewers")
-
-      included_super_reviewers = all_reviewers.count { |r| super_reviewers.include?(r) }
-
-      if included_super_reviewers < minimum_super_reviewers
-        pr.update_status(PullRequest::STATUS_AVOCADO)
-        return
-      end
-    end
 
     reviewers_without_access = pending_reviews.reject do |reviewer|
       github.collaborator?(pr.repository, reviewer)
